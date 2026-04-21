@@ -1,0 +1,18 @@
+projeto-ecommerce-lite/
+├── app.py                   # CAMADA DE APRESENTAÇÃO (Rotas Web)
+├── banco.sql                # Script simples para criar a tabela
+├── requirements.txt         # Apenas Flask e psycopg2-binary
+└── src/
+    ├── controllers/         # CAMADA DE LÓGICA DE NEGÓCIO
+    │   └── produto_controller.py
+    ├── models/              # Estrutura dos dados (Modelos)
+    │   └── produto_model.py
+    ├── views/
+    │   templates/               # Telas HTML simples
+    │   ├── base.html
+    │   ├── index.html           # (Listagem/Consulta)
+    │   └── cadastro.html        # (Cadastro)
+    ├── repository/          # CAMADA DE ACESSO A DADOS
+    │   └── produto_repository.py
+    └── database/
+        └── conexao.py       # Script simples de conexão
