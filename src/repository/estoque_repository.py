@@ -1,8 +1,14 @@
+# ==========================================
+# CAMADA DE ACESSO AO BANCO (Repository)
+# ==========================================
+# Este arquivo é o ÚNICO lugar onde escrevemos comandos SQL.
+# Ele se comunica direto com o banco de dados.
 from src.database.conexao import BancoDeDados
 
 
 class EstoqueRepository:
     def criar_estoque_inicial(self, produto_id, quantidade):
+        # Comando SQL para inserir um novo registro
         sql = """
             INSERT INTO estoque (produto_id, quantidade) VALUES (%s, %s);
         """
@@ -10,6 +16,7 @@ class EstoqueRepository:
             cursor.execute(sql, (produto_id, quantidade))
 
     def baixar_estoque(self, produto_id, quantidade_comprada=1):
+        # Diminui a quantidade no estoque, garantindo que não fique negativo
         sql = """
             UPDATE estoque
             SET quantidade = quantidade - %s
@@ -20,6 +27,7 @@ class EstoqueRepository:
             return cursor.rowcount > 0
 
     def adicionar_estoque(self, produto_id, quantidade_adicional):
+        # Aumenta a quantidade do estoque
         sql = """
             UPDATE estoque
             SET quantidade = quantidade + %s

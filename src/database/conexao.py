@@ -1,3 +1,8 @@
+# ==========================================
+# CONEXÃO COM O BANCO DE DADOS
+# ==========================================
+# Configura e gerencia a conexão com o PostgreSQL.
+# Abre e fecha a conexão automaticamente quando usamos o 'with'.
 from dotenv import load_dotenv
 import psycopg2
 import os

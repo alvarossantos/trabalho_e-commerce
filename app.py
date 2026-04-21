@@ -1,9 +1,13 @@
 import os
-from pydoc import describe
-
 from flask import Flask, render_template, request, redirect, flash
 from src.controllers.produto_controller import ProdutoController
 
+# ==========================================
+# CAMADA DE APRESENTAÇÃO (Rotas e Telas)
+# ==========================================
+# Este arquivo gerencia as rotas web (URLs).
+# Ele recebe os dados do usuário, chama o Controller para processar
+# e devolve a tela HTML pronta. Aqui não vai SQL nem regras de negócio.
 
 caminho_templates = os.path.abspath('src/views/templates')
 app = Flask(__name__, template_folder=caminho_templates)
@@ -13,6 +17,7 @@ controller = ProdutoController()
 
 @app.route('/')
 def index():
+    # Pega a lista de produtos do controller para mostrar na tela principal
     produtos = controller.listar_produtos()
     return render_template('index.html', produtos=produtos)
 
@@ -24,6 +29,7 @@ def cadastrar():
         preco = request.form.get('preco')
         quantidade = request.form.get('quantidade')
 
+        # Envia os dados do formulário para o controller processar o cadastro
         sucesso, mensagem = controller.cadastrar_produto_com_estoque(nome, descricao, preco, quantidade)
 
         if sucesso:
@@ -41,6 +47,7 @@ def editar(id):
         descricao = request.form.get('descricao')
         preco = request.form.get('preco')
 
+        # Envia os novos dados para o controller salvar a edição
         sucesso, mensagem = controller.atualizar_dados_produto(id, nome, descricao, preco)
 
         if sucesso:
@@ -49,6 +56,7 @@ def editar(id):
         else:
             flash(mensagem, 'danger')
 
+    # Carrega os dados do produto para preencher os campos na tela de edição
     produto = controller.buscar_produto_para_edicao(id)
     if not produto:
         flash('Produto não encontrado', 'warning')
@@ -60,12 +68,13 @@ def editar(id):
 def comprar(id):
     quantidade = request.form.get('quantidade')
 
+    # Tenta realizar a venda através do controller
     sucesso, mensagem = controller.realizar_venda(id, quantidade)
 
     if sucesso:
         flash(mensagem, 'success')
     else:
-        flash(mensagem, 'warning')
+        flash(mensagem, 'danger')
 
     return redirect('/')
 
@@ -73,12 +82,13 @@ def comprar(id):
 def repor(id):
     quantidade = request.form.get('quantidade')
 
+    # Tenta repor o estoque através do controller
     sucesso, mensagem = controller.repor_estoque(id, quantidade)
 
     if sucesso:
         flash(mensagem, 'success')
     else:
-        flash(mensagem, 'warning')
+        flash(mensagem, 'danger')
 
     return redirect('/')
 

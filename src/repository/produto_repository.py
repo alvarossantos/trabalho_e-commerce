@@ -1,9 +1,15 @@
+# ==========================================
+# CAMADA DE ACESSO AO BANCO (Repository)
+# ==========================================
+# Este arquivo é o ÚNICO lugar onde escrevemos comandos SQL.
+# Ele se comunica direto com o banco de dados.
 from src.database.conexao import BancoDeDados
 from src.models.produto_model import ProdutoModel
 
 
 class ProdutoRepository:
     def criar(self, produto: ProdutoModel):
+        # Comando SQL para inserir um novo registro
         sql = """
             INSERT INTO produtos (nome, descricao, preco)
             VALUES (%s, %s, %s)
@@ -14,6 +20,7 @@ class ProdutoRepository:
             return cursor.fetchone()[0]
 
     def listar_todos_com_estoque(self):
+        # Busca a lista de produtos e os respectivos estoques
         sql = """
             SELECT p.id, p.nome, p.descricao, p.preco, e.quantidade
             FROM produtos p
@@ -34,6 +41,7 @@ class ProdutoRepository:
         return resultados
 
     def buscar_por_id(self, produto_id):
+        # Busca um produto específico pelo ID
         sql = """
             SELECT id, nome, descricao, preco FROM produtos WHERE id = %s;
         """
@@ -45,6 +53,7 @@ class ProdutoRepository:
             return None
 
     def atualizar(self, produto_id, nome, descricao, preco):
+        # Atualiza os dados de um produto existente
         sql = """
             UPDATE produtos SET nome = %s, descricao = %s, preco = %s WHERE id = %s;
         """
