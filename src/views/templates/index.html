@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Lista de Produtos</h2>
+    <a href="/cadastrar" class="btn btn-primary">+ Novo Produto</a>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body">
+        {% if produtos %}
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th width="5%">ID</th>
+                        <th width="25%">Nome</th>
+                        <th width="25%">Descrição</th>
+                        <th width="15%">Preço (R$)</th>
+                        <th width="30%" class="text-center">Ações e Estoque</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in produtos %}
+                    <tr>
+                        <td>#{{ p.id }}</td>
+                        <td class="fw-bold">{{ p.nome }}</td>
+                        <td>{{ p.descricao }}</td>
+                        <td class="text-success fw-bold">R$ {{ "%.2f"|format(p.preco) }}</td>
+
+                        <td>
+                            <div class="p-2 bg-light rounded border">
+                                <div class="mb-3">
+                                    {% if p.quantidade > 0 %}
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="badge bg-primary">{{ p.quantidade }} em estoque</span>
+                                        </div>
+
+                                        <form action="/comprar/{{ p.id }}" method="POST">
+                                            <div class="input-group input-group-sm shadow-sm">
+                                                <input type="number" name="quantidade" min="1" max="{{ p.quantidade }}" value="1" class="form-control text-center" required title="Quantidade para comprar">
+                                                <button type="submit" class="btn btn-success fw-bold">🛒 Comprar</button>
+                                            </div>
+                                        </form>
+                                    {% else %}
+                                        <span class="badge bg-danger mb-2">Sem estoque</span>
+                                        <button class="btn btn-sm btn-secondary w-100 fw-bold shadow-sm" disabled>Esgotado</button>
+                                    {% endif %}
+                                </div>
+
+                                <div class="pt-2 border-top border-secondary-subtle">
+                                    <div class="d-flex flex-column gap-2">
+                                        <form action="/repor/{{ p.id }}" method="POST">
+                                            <div class="input-group input-group-sm shadow-sm">
+                                                <input type="number" name="quantidade" min="1" value="1" class="form-control text-center" required title="Quantidade para repor">
+                                                <button type="submit" class="btn btn-outline-primary fw-bold">➕ Repor</button>
+                                            </div>
+                                        </form>
+
+                                        <a href="/editar/{{ p.id }}" class="btn btn-sm btn-outline-dark w-100 shadow-sm">✏️ Editar Produto</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="text-center py-5">
+                <p class="text-muted fs-5">Nenhum produto cadastrado no momento.</p>
+                <a href="/cadastrar" class="btn btn-outline-primary">Cadastrar o primeiro produto</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
